@@ -54,9 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   register({Map card}) async {
     var formdata = _formKey.currentState;
-    print(card);
     if (formdata.validate()) {
-      print('validate');
       UserApi userApi = new UserApi();
       User user = await userApi.registerUser(card: card);
       if (user != null) {

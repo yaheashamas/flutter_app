@@ -200,7 +200,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           new Text("  انتظر بضع ثواني")
                         ],
                       ),
-                    ));
+                    )
+                    );
                     singin(card: cards);
                   },
                 ),
