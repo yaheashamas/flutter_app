@@ -5,7 +5,7 @@ import 'dart:convert' as convert;
 
 class CityAPI {
   Future<List<City>> getAllCities() async {
-    List<City> listCities = List<City>();
+    List<City> listCities = [];
     var url = device + cities;
     var response = await http.get(url);
     if (response.statusCode == 200) {
@@ -17,5 +17,6 @@ class CityAPI {
       }
       return listCities;
     }
+    return null;
   }
 }

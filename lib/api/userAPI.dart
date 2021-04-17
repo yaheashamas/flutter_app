@@ -15,6 +15,7 @@ class UserApi {
     } else {
       print('incorrect email/password');
     }
+    return null;
   }
 
   //geve token return information user
@@ -31,6 +32,7 @@ class UserApi {
     } else {
       print("token It's wrong");
     }
+    return null;
   }
 
   //send infomation from form to backend

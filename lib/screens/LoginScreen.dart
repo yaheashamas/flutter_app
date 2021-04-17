@@ -33,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
   singin({Map card}) async {
     var formdata = _formKey.currentState;
     if (formdata.validate()) {
-      print({"card =======> ":card});
       UserApi userApi = new UserApi();
       String token = await userApi.loginUser(card: card);
       if (token != null) {
@@ -200,8 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           new Text("  انتظر بضع ثواني")
                         ],
                       ),
-                    )
-                    );
+                    ));
                     singin(card: cards);
                   },
                 ),

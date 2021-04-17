@@ -7,7 +7,7 @@ import 'dart:convert' as convert;
 class RegistryAPI {
   
   getAllRegistry() async {
-    List<Register> allRefister = List<Register>();
+    List<Register> allRefister = [];
     var url = device + registry;
     var response = await http.get(url);
     if (response.statusCode == 200) {

@@ -8,6 +8,7 @@ part of 'AreaModel.dart';
 
 Area _$AreaFromJson(Map<String, dynamic> json) {
   return Area(
+    id: json['id'] as int,
     code: json['code'] as String,
     name: json['name'] as String,
     cityId: json['city_id'] as int,
@@ -18,6 +19,7 @@ Area _$AreaFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$AreaToJson(Area instance) => <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'code': instance.code,
       'city_id': instance.cityId,

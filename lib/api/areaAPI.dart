@@ -5,7 +5,7 @@ import 'dart:convert' as convert;
 
 class AreaAPi {
   getAllArea({int idCity}) async {
-    List<Area> allAreaFromSpecificCity = List<Area>();
+    List<Area> allAreaFromSpecificCity = [];
     Map data = {"id": idCity};
     var body = convert.jsonEncode(data);
     var url = device + areas;

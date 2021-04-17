@@ -53,7 +53,5 @@ class Auth extends ChangeNotifier {
     this._token = null;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("token");
-    preferences.remove("email");
-    preferences.remove("password");
   }
 }

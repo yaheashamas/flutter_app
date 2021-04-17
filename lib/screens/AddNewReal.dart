@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:real_estate/api/areaAPI.dart';
 import 'package:real_estate/api/cityAPI.dart';
 import 'package:real_estate/api/registryAPI.dart';
@@ -9,6 +9,9 @@ import 'package:real_estate/models/CityModel.dart';
 import 'package:real_estate/models/RealTypeModel.dart';
 import 'package:real_estate/models/RegisterModel.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:real_estate/services/auth.dart';
+import '../models/UserModel.dart';
+
 
 class AddNewReal extends StatefulWidget {
   AddNewReal({Key key}) : super(key: key);
@@ -17,16 +20,13 @@ class AddNewReal extends StatefulWidget {
 }
 
 class _AddNewRealState extends State<AddNewReal> {
-  TextEditingController _PriceController = TextEditingController();
-  TextEditingController _SpaceController = TextEditingController();
-  TextEditingController _NumberMounthController = TextEditingController();
-  TextEditingController _SpiesificationController = TextEditingController();
-  TextEditingController _NumberOfRoomController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
+  TextEditingController _spaceController = TextEditingController();
+  TextEditingController _numberMounthController = TextEditingController();
+  TextEditingController _spiesificationController = TextEditingController();
+  TextEditingController _numberOfRoomController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  //this key for all this page
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   List<bool> isSelected;
   int rentOrSale;
@@ -43,6 +43,7 @@ class _AddNewRealState extends State<AddNewReal> {
   Area selectArea;
   RealType selectType;
   Register selectRegister;
+  User user;
 
   //image
   List<Asset> images = [];
@@ -54,7 +55,7 @@ class _AddNewRealState extends State<AddNewReal> {
   //slider widget number of room
   int numberOfRoom = 25;
 
-  //load
+  //land
   int _bear;
   int _inviolable;
   int _roomLand;
@@ -71,10 +72,11 @@ class _AddNewRealState extends State<AddNewReal> {
     getArea(idCity: selectCityid);
     getType();
     getRegister();
-    this._bear = 0;
-    this._inviolable = 0;
-    this._roomLand = 0;
-    this._roofShed = 0;
+    this._bear = 2;
+    this._inviolable = 2;
+    this._roomLand = 2;
+    this._roofShed = 2;
+    this.user = Provider.of<Auth>(context, listen: false).user;
   }
   // -------------------------------------- START GET ALL URL ------------------
 
@@ -118,6 +120,17 @@ class _AddNewRealState extends State<AddNewReal> {
 
   //--------------------------------------- START ALL WIDGET -------------------
 
+  //return map for card
+  returnMap(int typeHome, Map home, Map shop, Map land) {
+    if (typeHome == 1) {
+      return home;
+    } else if (typeHome == 2) {
+      return shop;
+    } else {
+      return land;
+    }
+  }
+
   // widget rent or sale
   Widget _rentOrSaleWidget() {
     return ToggleButtons(
@@ -160,10 +173,14 @@ class _AddNewRealState extends State<AddNewReal> {
       child: TextFormField(
         decoration: InputDecoration(hintText: "السعر"),
         keyboardType: TextInputType.number,
-        controller: _PriceController,
+        controller: _priceController,
         validator: (value) {
-          if (value == null || value.isEmpty) {
+          if (value.isEmpty) {
             return 'السعر مطلوب';
+          } else if (value.length < 7) {
+            return 'السعر منخفض';
+          } else if (value.length > 10) {
+            return "السعر مرتفع";
           }
           return null;
         },
@@ -179,10 +196,14 @@ class _AddNewRealState extends State<AddNewReal> {
       child: TextFormField(
         decoration: InputDecoration(hintText: "المساحة"),
         keyboardType: TextInputType.number,
-        controller: _SpaceController,
+        controller: _spaceController,
         validator: (String value) {
           if (value.isEmpty) {
             return 'المساحة مطلوب';
+          } else if (value.length < 1) {
+            return "المساحة صغيرة";
+          } else if (value.length > 3) {
+            return "المساحة كبيرة";
           }
           return null;
         },
@@ -198,7 +219,7 @@ class _AddNewRealState extends State<AddNewReal> {
       child: TextFormField(
         decoration: InputDecoration(hintText: "عدد الاشهر"),
         keyboardType: TextInputType.number,
-        controller: _NumberMounthController,
+        controller: _numberMounthController,
         validator: (String value) {
           if (value.isEmpty) {
             return 'عدد الاشهر مطلوب';
@@ -217,8 +238,9 @@ class _AddNewRealState extends State<AddNewReal> {
       child: TextFormField(
         decoration: InputDecoration(hintText: "ملاحظات"),
         keyboardType: TextInputType.multiline,
-        maxLines: null,
-        controller: _SpiesificationController,
+        maxLines: 5,
+        maxLength: 1000,
+        controller: _spiesificationController,
         validator: (String value) {
           if (value.isEmpty) {
             return 'ملاحظات مطلوب';
@@ -231,24 +253,34 @@ class _AddNewRealState extends State<AddNewReal> {
 
   // coordinates الاحداثيات
   Widget _coordinates() {
-    return Column(
+    return Row(
       children: [
-        Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Text("الاحداثيات",
-                  style: TextStyle(color: Colors.grey[700], fontSize: 17)),
-            )),
-        Container(
-          margin: EdgeInsets.only(left: 20, top: 20),
-          width: 350,
-          height: 200,
-          decoration: BoxDecoration(
-              color: Colors.black, borderRadius: BorderRadius.circular(20)),
-        ),
+        Icon(Icons.location_on_outlined),
+        GestureDetector(
+          onTap: () async{
+
+          },
+        )
       ],
     );
+    // return Column(
+    //   children: [
+    //     Align(
+    //         alignment: Alignment.topRight,
+    //         child: Padding(
+    //           padding: const EdgeInsets.only(left: 20, top: 20),
+    //           child: Text("الاحداثيات",
+    //               style: TextStyle(color: Colors.grey[700], fontSize: 17)),
+    //         )),
+    //     Container(
+    //       margin: EdgeInsets.only(left: 20, top: 20),
+    //       width: 350,
+    //       height: 200,
+    //       decoration: BoxDecoration(
+    //           color: Colors.black, borderRadius: BorderRadius.circular(20)),
+    //     ),
+    //   ],
+    // );
   }
 
   //start widget Image
@@ -355,10 +387,12 @@ class _AddNewRealState extends State<AddNewReal> {
       child: TextFormField(
         decoration: InputDecoration(hintText: "عدد الغرف"),
         keyboardType: TextInputType.number,
-        controller: _NumberOfRoomController,
+        controller: _numberOfRoomController,
         validator: (String value) {
           if (value.isEmpty) {
             return 'عدد الغرف مطلوب';
+          } else if (value.length > 20) {
+            return 'عدد الغرف كبير';
           }
           return null;
         },
@@ -845,25 +879,81 @@ class _AddNewRealState extends State<AddNewReal> {
                             : Container(),
                         // end view all image
 
-                        // submit
-                        FlatButton(
-                          padding: EdgeInsets.all(10.0),
-                          minWidth: double.infinity,
-                          color: Colors.blue[300],
-                          child: Container(
-                              child: Text("حفظ",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20))),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Processing Data')));
-                            }
-                          },
-                        ),
+                        selectType != null
+                            ?
+                            // submit
+                            FlatButton(
+                                padding: EdgeInsets.all(10.0),
+                                minWidth: double.infinity,
+                                color: Colors.blue[300],
+                                child: Container(
+                                    child: Text("حفظ",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20))),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                onPressed: () {
+                                  Map cardHome = {
+                                    'livery': nameStoryHome,
+                                    'number_of_room':
+                                        _numberOfRoomController.text
+                                  };
+                                  Map cardLand = {
+                                    'bear': _bear,
+                                    'inviolable': _inviolable,
+                                    'room': _roomLand,
+                                  };
+                                  Map cardShop = {'roof_shed': _roofShed};
+                                  Map cards = {
+                                    'rent_or_sale': rentOrSale,
+                                    'space': _spaceController.text,
+                                    'price': _priceController.text,
+                                    'location_description':
+                                        _spiesificationController.text,
+                                    'area_id': selectArea.id,
+                                    'realEstateRegistry_id': selectRegister.id,
+                                    'realEstateType_id': selectType.id,
+                                    'user_id': user.id,
+                                    'number_month':
+                                        _numberMounthController.text,
+                                    'url[]': images,
+                                    'Specifications': returnMap(selectType.id,
+                                        cardHome, cardShop, cardLand),
+                                    // 'x_latitude' : ,
+                                    // 'y_longitude' : ,
+                                  };
+                                  if (images.isEmpty) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          Future.delayed(Duration(seconds: 5),
+                                              () {
+                                            Navigator.of(context).pop(true);
+                                          });
+                                          return Directionality(
+                                            textDirection: TextDirection.rtl,
+                                            child: AlertDialog(
+                                              content: Icon(Icons.warning),
+                                              title: Text(
+                                                  'الرجاء اختر صور للعقار'),
+                                            ),
+                                          );
+                                        });
+                                  } else {
+                                    if (_formKey.currentState.validate()) {
+                                      print(selectType.id);
+                                      print(cards);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content:
+                                                  Text('Processing Data')));
+                                    }
+                                  }
+                                },
+                              )
+                            : Container()
                       ],
                     ),
                   ),
