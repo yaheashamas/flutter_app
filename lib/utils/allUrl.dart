@@ -1,18 +1,20 @@
-String device = "http://192.168.1.108:8000/";
+String device = "192.168.1.108:8000";
 //device
-String getToken = "api/login";
+String getToken = "/api/login";
 //user
-String getInforUserFromToken = "api/user";
-String userRegister = "api/register";
-String allUsers = "api/users";
-String refresh = "api/refresh";
+String getInforUserFromToken = "/api/user";
+String userRegister = "/api/register";
+String allUsers = "/api/users";
+String refresh = "/api/refresh";
 //realEstate
-String realEstates = 'api/realestates';
+
+String realEstates = '/api/realestates';
+String addRealEstate = '/api/realestate/user/';
 //city
-String cities = "api/cities";
+String cities = "/api/cities";
 //area
-String areas = "api/areas";
+String areas = "/api/areas";
 //type
-String type = "api/types";
+String type = "/api/types";
 //Registries
-String registry = "api/Registries";
+String registry = "/api/Registries";

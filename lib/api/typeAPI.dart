@@ -7,7 +7,7 @@ import 'dart:convert' as convert;
 class TypeAPI {
   getAllType() async {
     List<RealType> allType = [];
-    var url = device + type;
+    var url = Uri.http(device,type);
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var responseBody = convert.jsonDecode(response.body);

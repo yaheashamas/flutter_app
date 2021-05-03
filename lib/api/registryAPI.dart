@@ -8,7 +8,7 @@ class RegistryAPI {
   
   getAllRegistry() async {
     List<Register> allRefister = [];
-    var url = device + registry;
+    var url = Uri.http(device,registry);
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var responseBody = convert.jsonDecode(response.body);

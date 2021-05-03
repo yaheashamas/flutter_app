@@ -6,7 +6,7 @@ import 'dart:convert' as convert;
 class CityAPI {
   Future<List<City>> getAllCities() async {
     List<City> listCities = [];
-    var url = device + cities;
+    var url = Uri.http(device, cities);
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var responseBody =

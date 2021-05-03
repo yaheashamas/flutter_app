@@ -1,17 +1,28 @@
+import 'dart:async';
+import 'dart:io' as Io;
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:real_estate/api/areaAPI.dart';
 import 'package:real_estate/api/cityAPI.dart';
+import 'package:real_estate/api/realEstateAPI.dart';
 import 'package:real_estate/api/registryAPI.dart';
 import 'package:real_estate/api/typeAPI.dart';
 import 'package:real_estate/models/AreaModel.dart';
 import 'package:real_estate/models/CityModel.dart';
+import 'package:real_estate/models/RealEstateModel.dart';
 import 'package:real_estate/models/RealTypeModel.dart';
 import 'package:real_estate/models/RegisterModel.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:real_estate/services/auth.dart';
-import '../models/UserModel.dart';
-
+import 'package:real_estate/screens/map/address.dart';
+import 'package:real_estate/models/UserModel.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 class AddNewReal extends StatefulWidget {
   AddNewReal({Key key}) : super(key: key);
@@ -29,7 +40,7 @@ class _AddNewRealState extends State<AddNewReal> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   List<bool> isSelected;
-  int rentOrSale;
+  int rentOrSale = 0;
   int selectCityid = 0;
   bool changeEnaldeAndDesabel = false;
 
@@ -47,6 +58,7 @@ class _AddNewRealState extends State<AddNewReal> {
 
   //image
   List<Asset> images = [];
+  List<dynamic> files = [];
 
   //list story home
   String nameStoryHome;
@@ -63,6 +75,12 @@ class _AddNewRealState extends State<AddNewReal> {
   //shop
   int _roofShed;
 
+  //map
+  LatLng positioned;
+
+  //flutter_easyLoding
+  Timer _timer;
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +95,13 @@ class _AddNewRealState extends State<AddNewReal> {
     this._roomLand = 2;
     this._roofShed = 2;
     this.user = Provider.of<Auth>(context, listen: false).user;
+    //flutter_easyLoading
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
   }
   // -------------------------------------- START GET ALL URL ------------------
 
@@ -174,6 +199,7 @@ class _AddNewRealState extends State<AddNewReal> {
         decoration: InputDecoration(hintText: "السعر"),
         keyboardType: TextInputType.number,
         controller: _priceController,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         validator: (value) {
           if (value.isEmpty) {
             return 'السعر مطلوب';
@@ -236,7 +262,7 @@ class _AddNewRealState extends State<AddNewReal> {
       margin: EdgeInsets.only(left: 20, top: 18),
       width: 350,
       child: TextFormField(
-        decoration: InputDecoration(hintText: "ملاحظات"),
+        decoration: InputDecoration(hintText: "وصف العقار"),
         keyboardType: TextInputType.multiline,
         maxLines: 5,
         maxLength: 1000,
@@ -251,39 +277,37 @@ class _AddNewRealState extends State<AddNewReal> {
     );
   }
 
-  // coordinates الاحداثيات
+  // coordinates احداثيات
   Widget _coordinates() {
-    return Row(
-      children: [
-        Icon(Icons.location_on_outlined),
-        GestureDetector(
-          onTap: () async{
-
-          },
-        )
-      ],
-    );
-    // return Column(
-    //   children: [
-    //     Align(
-    //         alignment: Alignment.topRight,
-    //         child: Padding(
-    //           padding: const EdgeInsets.only(left: 20, top: 20),
-    //           child: Text("الاحداثيات",
-    //               style: TextStyle(color: Colors.grey[700], fontSize: 17)),
-    //         )),
-    //     Container(
-    //       margin: EdgeInsets.only(left: 20, top: 20),
-    //       width: 350,
-    //       height: 200,
-    //       decoration: BoxDecoration(
-    //           color: Colors.black, borderRadius: BorderRadius.circular(20)),
-    //     ),
-    //   ],
-    // );
+    return FloatingActionButton(
+        onPressed: () async {
+          positioned = await Navigator.push(context,
+              new MaterialPageRoute(builder: (context) => new AddressMap()));
+        },
+        backgroundColor:
+            this.positioned == null ? Colors.red : Colors.blue[300],
+        child: Icon(Icons.add_location_alt_outlined));
   }
 
-  //start widget Image
+  getImageFileFromAsset(String path) async {
+    final file = File(path);
+    return file;
+  }
+
+  submit() async {
+    files = [];
+    if (images != null) {
+      for (int i = 0; i < images.length; i++) {
+        var path2 =
+            await FlutterAbsolutePath.getAbsolutePath(images[i].identifier);
+        var file = await getImageFileFromAsset(path2);
+        var base64Image =
+            "data:image/jpeg;base64," + base64Encode(file.readAsBytesSync());
+        files.add(base64Image);
+      }
+    }
+  }
+
   Widget _buildGridView() {
     return GridView.count(
       crossAxisCount: 3,
@@ -323,17 +347,18 @@ class _AddNewRealState extends State<AddNewReal> {
     if (!mounted) return;
     setState(() {
       images = resultList;
+      submit();
     });
   }
 
   //button image
   Widget _buttonSelectImage() {
     return FloatingActionButton(
-        backgroundColor: Colors.blue[300],
-        child: Icon(Icons.camera_alt_outlined),
+        backgroundColor: images.isEmpty ? Colors.red : Colors.blue[300],
+        child: Icon(Icons.add_a_photo_outlined),
         onPressed: loadAssets);
   }
-  // end widget image
+  // end button image
 
   //----------------------------------------- start spcification widget home ---
 
@@ -586,6 +611,14 @@ class _AddNewRealState extends State<AddNewReal> {
         ]));
   }
 
+  //start send data to http and add new real estate
+  saveData({Map card}) async {
+    var formdata = _formKey.currentState;
+    if (formdata.validate()) {
+    } else {}
+  }
+  //end send data to http and add new real estate
+
   //----------------------------------------- end spcification widget shop -----
   Widget specifications() {
     return Column(
@@ -649,6 +682,23 @@ class _AddNewRealState extends State<AddNewReal> {
   }
 
   //---------------------------------------- END ALL WIDGET --------------------
+
+  //----------------------------------------- start send information -----------
+  Future<RealEstate> sendInformation({Map card, int idUser}) {
+    int iduser = Provider.of<Auth>(context, listen: false).user.id;
+    var formkey = _formKey.currentState;
+    if (formkey.validate()) {
+      EasyLoading.show(status: '... انتظر قليلا');
+      RealEstateAPI realEstateAPI = new RealEstateAPI();
+      realEstateAPI.addNewRealEstate(idUser: iduser, card: card);
+      EasyLoading.showSuccess('تم تحميل البيانات بنجاح');
+      Timer(Duration(seconds: 1), () {
+        Navigator.pop(context, true);
+      });
+    }
+  }
+
+  //----------------------------------------- start send information -----------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -754,7 +804,6 @@ class _AddNewRealState extends State<AddNewReal> {
                                       onChanged: (value) {
                                         setState(() {
                                           this.selectArea = value;
-                                          print({"selectArea": selectArea});
                                         });
                                       }),
                                 ),
@@ -802,9 +851,6 @@ class _AddNewRealState extends State<AddNewReal> {
                                       onChanged: (value) {
                                         setState(() {
                                           this.selectRegister = value;
-                                          print({
-                                            "selectRegister": selectRegister
-                                          });
                                         });
                                       }),
                                 ),
@@ -859,8 +905,6 @@ class _AddNewRealState extends State<AddNewReal> {
                         //end DropdownButton type
                         //start Display the distinctive property specifications
                         specificationsFinal(),
-                        selectType != null ? _coordinates() : Container(),
-
                         SizedBox(
                           height: 10,
                         ),
@@ -868,10 +912,10 @@ class _AddNewRealState extends State<AddNewReal> {
                         // start view all image
                         selectType != null
                             ? Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 10, left: 20),
+                                padding: const EdgeInsets.only(
+                                    right: 10, left: 20, bottom: 20),
                                 child: SizedBox(
-                                  height: images.isEmpty ? 0 : 300,
+                                  height: images.isEmpty ? 0 : 150,
                                   width: MediaQuery.of(context).size.width,
                                   child: _buildGridView(),
                                 ),
@@ -908,8 +952,8 @@ class _AddNewRealState extends State<AddNewReal> {
                                   Map cardShop = {'roof_shed': _roofShed};
                                   Map cards = {
                                     'rent_or_sale': rentOrSale,
-                                    'space': _spaceController.text,
-                                    'price': _priceController.text,
+                                    'space': int.parse(_spaceController.text),
+                                    'price': int.parse(_priceController.text),
                                     'location_description':
                                         _spiesificationController.text,
                                     'area_id': selectArea.id,
@@ -918,12 +962,16 @@ class _AddNewRealState extends State<AddNewReal> {
                                     'user_id': user.id,
                                     'number_month':
                                         _numberMounthController.text,
-                                    'url[]': images,
                                     'Specifications': returnMap(selectType.id,
                                         cardHome, cardShop, cardLand),
-                                    // 'x_latitude' : ,
-                                    // 'y_longitude' : ,
+                                    'x_latitude': positioned.latitude,
+                                    'y_longitude': positioned.longitude,
+                                    'images': files,
                                   };
+                                  print({"card": cards});
+                                  files.forEach((element) {
+                                    print({"element": element});
+                                  });
                                   if (images.isEmpty) {
                                     showDialog(
                                         context: context,
@@ -942,14 +990,7 @@ class _AddNewRealState extends State<AddNewReal> {
                                           );
                                         });
                                   } else {
-                                    if (_formKey.currentState.validate()) {
-                                      print(selectType.id);
-                                      print(cards);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content:
-                                                  Text('Processing Data')));
-                                    }
+                                    sendInformation(card: cards);
                                   }
                                 },
                               )
@@ -961,7 +1002,15 @@ class _AddNewRealState extends State<AddNewReal> {
               ),
               selectType != null
                   ? Positioned(
-                      bottom: 20, left: 10, child: _buttonSelectImage())
+                      bottom: 20,
+                      left: 10,
+                      child: Column(
+                        children: [
+                          _coordinates(),
+                          SizedBox(height: 10),
+                          _buttonSelectImage(),
+                        ],
+                      ))
                   : Container()
             ],
           )),

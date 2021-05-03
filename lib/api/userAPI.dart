@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import '../models/UserModel.dart';
@@ -6,7 +7,7 @@ import '../utils/allUrl.dart';
 class UserApi {
   //send email and password then i Taking token
   Future<String> loginUser({Map card}) async {
-    var url = device + getToken;
+    var url = Uri.http(device , getToken);
     var response = await http.post(url, body: card);
     var responseBody = convert.jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -20,9 +21,14 @@ class UserApi {
 
   //geve token return information user
   Future<User> getInfoUserFromToken({String token}) async {
-    var url = device + getInforUserFromToken;
+    var url = Uri.http(device , getInforUserFromToken);
     var response =
-        await http.get(url, headers: {'Authorization': 'Bearer $token'});
+        await http.get(
+          url, 
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $token',
+            //  'Authorization': 'Bearer $token'
+          });
     if (response.statusCode == 200) {
       var responseJsone =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
@@ -37,7 +43,7 @@ class UserApi {
 
   //send infomation from form to backend
   Future<User> registerUser({Map card}) async {
-    var url = device + userRegister;
+    var url =Uri.http(device,userRegister);
     var response = await http.post(url,
         body: convert.jsonEncode(card),
         headers: {

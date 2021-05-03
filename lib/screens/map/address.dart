@@ -3,24 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-class MapScreen extends StatefulWidget {
-  MapScreen({Key key}) : super(key: key);
+class AddressMap extends StatefulWidget {
+  AddressMap({Key key}) : super(key: key);
 
   @override
-  _MapScreenState createState() => _MapScreenState();
+  _AddressMapState createState() => _AddressMapState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _AddressMapState extends State<AddressMap> {
   GoogleMapController mapController;
   String sreachAddr;
-  List<Marker> markers = [];
+  Marker marker = Marker(markerId: MarkerId("0"));
   int id = Random().nextInt(100);
+  LatLng fposition;
 
   addmarker(cordinate) {
     setState(() {
-      markers = [];
-      markers
-          .add(Marker(markerId: MarkerId(id.toString()), position: cordinate));
+      marker = Marker(markerId: MarkerId(id.toString()), position: cordinate);
     });
   }
 
@@ -34,7 +33,7 @@ class _MapScreenState extends State<MapScreen> {
               mapController = controller;
             });
           },
-          markers: markers.toSet(),
+          markers: marker != null ? <Marker>[marker].toSet() : null,
           onTap: (cordinate) async {
             mapController.animateCamera(CameraUpdate.newLatLng(cordinate));
             addmarker(cordinate);
@@ -57,11 +56,9 @@ class _MapScreenState extends State<MapScreen> {
                         target: LatLng(position.latitude, position.longitude),
                         zoom: 17.0)));
                 setState(() {
-                  markers.add(Marker(
-                      markerId: MarkerId(id.toString()),
-                      position: LatLng(position.latitude, position.longitude)));
+                  LatLng latLng = LatLng(position.latitude, position.longitude);
+                  addmarker(latLng);
                 });
-                
               },
               elevation: 1.0,
               fillColor: Colors.blue[300],
@@ -72,6 +69,32 @@ class _MapScreenState extends State<MapScreen> {
               padding: EdgeInsets.all(10.0),
               shape: CircleBorder(),
             )),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          child: Container(
+            width: 150,
+            height: 40,
+            child: ElevatedButton(
+              child: Text("حفظ"),
+              onPressed: () {
+                fposition = marker.position;
+                if (fposition != null) {
+                  Navigator.pop(context,fposition);
+                } else {
+                  print("postion is null");
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue[300],
+                onPrimary: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
+                ),
+              ),
+            ),
+          ),
+        )
       ],
     );
   }

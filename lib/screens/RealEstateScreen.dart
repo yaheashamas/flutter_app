@@ -7,7 +7,9 @@ class RealEstateScreen extends StatefulWidget {
   _RealEstateScreenState createState() => _RealEstateScreenState();
 }
 
-class _RealEstateScreenState extends State<RealEstateScreen> with SingleTickerProviderStateMixin{
+class _RealEstateScreenState extends State<RealEstateScreen>
+    with SingleTickerProviderStateMixin {
+
   TabController _tabController;
 
   @override
@@ -24,28 +26,53 @@ class _RealEstateScreenState extends State<RealEstateScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return  
-      Scaffold(
+    return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
           child: AppBar(
             backgroundColor: Colors.blue[200],
             bottom: TabBar(tabs: [
-              Tab( child: Text("بيت",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
-              Tab( child: Text("محل",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
-              Tab( child: Text("أرض",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
-            ],controller: _tabController),
+              Tab(
+                  child: Text(
+                "بيت",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              )),
+              Tab(
+                  child: Text(
+                "محل",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              )),
+              Tab(
+                  child: Text(
+                "أرض",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              )),
+            ], controller: _tabController),
           ),
         ),
         body: Center(
-          child:TabBarView(
-            children: [
-              TapHomeScreen(typeRealEstate: 1,),
-              TapHomeScreen(typeRealEstate: 2,),
-              TapHomeScreen(typeRealEstate: 3,),
-            ],controller: _tabController,
-          )
-        )
-      );
+            child: TabBarView(
+          children: [
+            TapHomeScreen(
+              typeRealEstate: 1,
+            ),
+            TapHomeScreen(
+              typeRealEstate: 2,
+            ),
+            TapHomeScreen(
+              typeRealEstate: 3,
+            ),
+          ],
+          controller: _tabController,
+        )));
   }
 }

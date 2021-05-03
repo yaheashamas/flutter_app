@@ -30,7 +30,10 @@ class RealEstateCard extends StatelessWidget {
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
                       )),
-                    child: CachedNetworkImage(
+                    child: realEstate.images.isEmpty ?
+                    Image.asset('images/real.jpeg',fit: BoxFit.cover,)
+                    :
+                    CachedNetworkImage(
                       width: double.infinity,
                       imageUrl: realEstate.images[0].url,
                       placeholder: (context, url) => Center(child: CircularProgressIndicator()),
@@ -77,7 +80,7 @@ class RealEstateCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                 Icon(Icons.location_pin,color: Colors.grey),
-                                Text(realEstate.area.name,style: TextStyle(color: Colors.grey),)
+                                Flexible(child: Text(realEstate.area.name,style: TextStyle(color: Colors.grey),))
                               ],
                               ),
                             ),

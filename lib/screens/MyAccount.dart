@@ -53,17 +53,15 @@ class _MyAcountState extends State<MyAcount> {
                       shape: BoxShape.circle,
                     ),
                   ),
-                  user == null 
-                  ?
-                  Container()
-                  :
-                  Column(
-                    children: [
-                      Text(user.name),
-                      Text(user.phone.toString()),
-                      Text(user.email)
-                    ],
-                  ) 
+                  user == null
+                      ? Container()
+                      : Column(
+                          children: [
+                            Text(user.name),
+                            Text(user.phone.toString()),
+                            Text(user.email)
+                          ],
+                        )
                 ],
               ),
             ),

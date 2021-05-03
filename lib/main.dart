@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:real_estate/screens/HomePage.dart';
 import 'package:provider/provider.dart';
 import 'package:real_estate/screens/LoginScreen.dart';
 import 'package:real_estate/screens/MyAccount.dart';
 import 'package:real_estate/screens/NotificationScreen.dart';
+import 'package:real_estate/screens/Screen%20TabBar/TapHomeScreen.dart';
 import 'package:real_estate/services/auth.dart';
 //storage token = cockis
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,16 +19,40 @@ void main() {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: MyApp(),
-        theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity
-        ),
-        routes:{
-          'myAccount' :(context){return MyAcount();},
-          'notification' : (context){return NotifivationScreen();},
+        theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
+        routes: {
+          'myAccount': (context) {
+            return MyAcount();
+          },
+          'notification': (context) {
+            return NotifivationScreen();
+          },
+          'home': (context) {
+            return TapHomeScreen();
+          }
         },
+        builder: EasyLoading.init(),
       ),
     ),
   );
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
+  // ..customAnimation = CustomAnimation();
 }
 
 class MyApp extends StatelessWidget {

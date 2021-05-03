@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../api/userAPI.dart';
 //model User
@@ -10,10 +11,17 @@ class Auth extends ChangeNotifier {
   User _user;
   String _token;
 
+  //map
+  double _latitude;
+  double _longitude;
+
   //call _isLogIn and user OutSide class
   bool get authenticated => _isLogIn;
   User get user => _user;
   String get token => _token;
+
+  double get latitude => _latitude;
+  double get longitude => _longitude;
 
   //Make a copy class User APi
   UserApi userApi = new UserApi();
@@ -32,7 +40,7 @@ class Auth extends ChangeNotifier {
       // Save Info User
       this._user = await userApi.getInfoUserFromToken(token: token);
       this._isLogIn = true;
-      
+
       //function to save token in mobaile
       this.storeToken(token: token);
       notifyListeners();

@@ -6,11 +6,14 @@ import 'dart:convert' as convert;
 class AreaAPi {
   getAllArea({int idCity}) async {
     List<Area> allAreaFromSpecificCity = [];
+
     Map data = {"id": idCity};
     var body = convert.jsonEncode(data);
-    var url = device + areas;
+    var url = Uri.http(device, areas);
+
     var response = await http
         .post(url, body: body, headers: {"Content-Type": "application/json"});
+
     if (response.statusCode == 200) {
       var responseBody =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
