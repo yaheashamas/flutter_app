@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io' as Io;
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -969,9 +968,6 @@ class _AddNewRealState extends State<AddNewReal> {
                                     'images': files,
                                   };
                                   print({"card": cards});
-                                  files.forEach((element) {
-                                    print({"element": element});
-                                  });
                                   if (images.isEmpty) {
                                     showDialog(
                                         context: context,

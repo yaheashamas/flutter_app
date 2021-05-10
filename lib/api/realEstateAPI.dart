@@ -44,4 +44,19 @@ class RealEstateAPI {
       return null;
     }
   }
+
+  allRealEstates() async {
+    List<RealEstate> realEstates = [];
+    var url = Uri.http(device, allRealEstate);
+    var response = await http.post(url);
+    if (response.statusCode == 200) {
+      var responseBody =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      var data = responseBody['data'];
+      for (var item in data) {
+        realEstates.add(RealEstate.fromJson(item));
+      }
+      return realEstates;
+    }
+  }
 }

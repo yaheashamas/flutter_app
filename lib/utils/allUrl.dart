@@ -7,9 +7,9 @@ String userRegister = "/api/register";
 String allUsers = "/api/users";
 String refresh = "/api/refresh";
 //realEstate
-
 String realEstates = '/api/realestates';
 String addRealEstate = '/api/realestate/user/';
+String allRealEstate = '/api/AllRealEstates';
 //city
 String cities = "/api/cities";
 //area

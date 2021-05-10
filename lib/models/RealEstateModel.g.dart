@@ -8,6 +8,7 @@ part of 'RealEstateModel.dart';
 
 RealEstate _$RealEstateFromJson(Map<String, dynamic> json) {
   return RealEstate(
+    id: json['id'] as int,
     rentOrSale: (json['rent_or_sale'] as num)?.toDouble(),
     numberMonth: json['number_month'] as int,
     price: json['price'] as int,
@@ -38,6 +39,7 @@ RealEstate _$RealEstateFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$RealEstateToJson(RealEstate instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'rent_or_sale': instance.rentOrSale,
       'number_month': instance.numberMonth,
       'location_description': instance.locationDescription,

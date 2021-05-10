@@ -22,6 +22,7 @@ class RealEstateCard extends StatelessWidget {
             child: Card(
               child: Column(
                 children: [
+                  //start container image
                   Container(
                     width: double.infinity,
                     height: 200,
@@ -31,7 +32,7 @@ class RealEstateCard extends StatelessWidget {
                         topRight: Radius.circular(10),
                       )),
                     child: realEstate.images.isEmpty ?
-                    Image.asset('images/real.jpeg',fit: BoxFit.cover,)
+                    Image.asset('images/real.png',fit: BoxFit.cover,)
                     :
                     CachedNetworkImage(
                       width: double.infinity,
@@ -41,6 +42,8 @@ class RealEstateCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
+                  //end container image
+
                   Container(
                     padding: EdgeInsets.only(right: 10,left: 10),
                     child: Column(
@@ -61,8 +64,8 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                Icon(Icons.my_library_books_outlined, color: Colors.grey),
-                                Text(realEstate.register.name,style: TextStyle(color: Colors.grey),),
+                                Icon(Icons.my_library_books_outlined),
+                                Text(realEstate.register.name),
                               ],
                               ),
                             ),
@@ -70,8 +73,8 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(realEstate.realType.code == "HOME" ? Icons.home_outlined : Icons.shop, color: Colors.grey),
-                                Text(realEstate.realType.name,style: TextStyle(color: Colors.grey),)
+                                Icon(realEstate.realType.code == "HOME" ? Icons.home_outlined : Icons.shop),
+                                Text(realEstate.realType.name)
                               ],
                             ),
                             ),
@@ -79,8 +82,8 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                Icon(Icons.location_pin,color: Colors.grey),
-                                Flexible(child: Text(realEstate.area.name,style: TextStyle(color: Colors.grey),))
+                                Icon(Icons.location_on_outlined),
+                                Flexible(child: Text(realEstate.area.name,))
                               ],
                               ),
                             ),
@@ -88,8 +91,8 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.location_city, color: Colors.grey),
-                                Text(realEstate.area.city.name,style:TextStyle(color: Colors.grey),)
+                                Icon(Icons.location_city_rounded),
+                                Text(realEstate.area.city.name)
                               ],
                             ),
                             )

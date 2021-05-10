@@ -1,9 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:real_estate/models/RealEstateModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:real_estate/services/auth.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DescRealEstateScreen extends StatefulWidget {
   final RealEstate estate;
@@ -13,11 +15,15 @@ class DescRealEstateScreen extends StatefulWidget {
 }
 
 class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
-  // bool _favorate = true;
   RealEstate estate;
   List allUrlImages;
   int _current = 0;
-  
+
+  GoogleMapController mapController;
+  List<Marker> marker = [];
+  int id = Random().nextInt(100);
+  LatLng latLng;
+
   List allImages() {
     List listImages = [];
     for (var i = 0; i < estate.images.length; i++) {
@@ -31,6 +37,8 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
     super.initState();
     estate = widget.estate;
     allUrlImages = allImages();
+    latLng = LatLng(estate.xLatitude, estate.yLongitude);
+    marker.add(Marker(markerId: MarkerId(id.toString()), position: latLng));
   }
 
   CarouselController buttonCarouselController = CarouselController();
@@ -51,8 +59,10 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
           body: ListView(
             children: [
               Container(
+                // layouts
                 child: Stack(
                   children: [
+                    // start images
                     CarouselSlider(
                       items: allUrlImages.map((i) {
                         return Builder(
@@ -83,6 +93,7 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                             });
                           }),
                     ),
+                    // strat posinter image
                     Positioned(
                       top: 340,
                       right: MediaQuery.of(context).size.width / 2.13,
@@ -104,6 +115,10 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                         }).toList(),
                       ),
                     ),
+                    // end posinter image
+                    // end images
+
+                    // start slide discription
                     Container(
                       margin: EdgeInsets.only(top: size.height * 0.50),
                       decoration: BoxDecoration(
@@ -113,195 +128,186 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                           ),
                           color: Colors.white),
                       child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 10, top: 20),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                        padding: const EdgeInsets.only(
+                            top: 20, right: 15, left: 15, bottom: 20),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // price
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("السعر",
-                                        style: TextStyle(fontSize: 20)),
+                                    Text(
+                                      " السعر",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
                                     Text(fmf.output.withoutFractionDigits,
                                         style: TextStyle(
-                                            fontSize: 23, color: Colors.grey)),
+                                          fontSize: 23,
+                                        )),
                                   ]),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 10, top: 20),
-                              child: Text(
+                              SizedBox(height: 20),
+                              // Specifications
+                              Text(
                                 "المواصفات",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.grey),
                               ),
-                            ),
-                            SizedBox(height: 30),
-                            //start first row
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Icon(
-                                        estate.realType.code == "HOME"
-                                            ? Icons.home_outlined
-                                            : Icons.shop,
-                                        color: Colors.grey),
-                                    Text(
-                                      estate.realType.name,
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                )),
-                                Container(
-                                  height: 35,
-                                  width: 0.5,
-                                  color: Colors.grey,
-                                ),
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Icon(Icons.location_pin,
-                                        color: Colors.grey),
-                                    Text(
-                                      estate.area.name,
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                )),
-                                Container(
-                                  height: 35,
-                                  width: 0.5,
-                                  color: Colors.grey,
-                                ),
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Icon(Icons.location_city,
-                                        color: Colors.grey),
-                                    Text(
-                                      estate.area.city.name,
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                )),
-                              ],
-                            ),
-                            //end first row
-                            SizedBox(height: 30),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                decoration: BoxDecoration(color: Colors.grey),
-                                height: 0.3,
-                                width: 200,
-                              ),
-                            ),
-                            SizedBox(height: 30),
-                            //start last row
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Icon(Icons.architecture,
-                                        color: Colors.grey),
-                                    Text(
-                                      estate.space.toString(),
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                )),
-                                Container(
-                                  height: 35,
-                                  width: 0.5,
-                                  color: Colors.grey,
-                                ),
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Icon(Icons.location_pin,
-                                        color: Colors.grey),
-                                    Text(
-                                      estate.rentOrSale.toString() == "1.0"
-                                          ? "بيع"
-                                          : "اجار",
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                )),
-                                Container(
-                                  height: 35,
-                                  width: 0.5,
-                                  color: Colors.grey,
-                                ),
-                                estate.rentOrSale.toString() == "0.0"
-                                    ? Expanded(
-                                        child: Column(
-                                        children: [
-                                          Icon(Icons.calendar_today,
-                                              color: Colors.grey),
-                                          Text(
-                                            estate.numberMonth.toString(),
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          )
-                                        ],
-                                        
-                                      ))
-                                    : Expanded(child: Container())
-                              ],
-                            ),
-                            //end last row
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 10, top: 20),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("وصف العقار",
-                                        style: TextStyle(fontSize: 20)),
-                                    Text(estate.locationDescription,
-                                        style: TextStyle(
-                                            fontSize: 23, color: Colors.grey)),
-                                  ]),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 10, top: 20),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text("احداثيات العقار",
-                                        style: TextStyle(fontSize: 20)),
-                                    Container(
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.black,
-                                      ),
-                                    )
-                                  ]),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(right: 10, top: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                              SizedBox(height: 20),
+                              //start first row
+                              Row(
                                 children: [
-                                  Text("رقم الهاتف صاحب العقار",
-                                      style: TextStyle(fontSize: 20)),
-                                  SizedBox(height: 10),
-                                  Text("$phoneNumber",
-                                      style: TextStyle(fontSize: 20,color: Colors.grey))
-                                ]),
-                            ),
-                          ],
+                                  Expanded(
+                                      child: Column(
+                                    children: [
+                                      Icon(
+                                        estate.realType.code == "HOME"
+                                            ? Icons.roofing_outlined
+                                            : Icons
+                                                .store_mall_directory_outlined,
+                                      ),
+                                      Text(
+                                        estate.realType.name,
+                                      )
+                                    ],
+                                  )),
+                                  Container(
+                                    height: 35,
+                                    width: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  Expanded(
+                                      child: Column(
+                                    children: [
+                                      Icon(Icons.room_outlined),
+                                      Text(estate.area.name)
+                                    ],
+                                  )),
+                                  Container(
+                                    height: 35,
+                                    width: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  Expanded(
+                                      child: Column(
+                                    children: [
+                                      Icon(Icons.location_city_rounded),
+                                      Text(
+                                        estate.area.city.name,
+                                      )
+                                    ],
+                                  )),
+                                ],
+                              ),
+                              //end first row
+                              SizedBox(height: 15),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  decoration: BoxDecoration(color: Colors.grey),
+                                  height: 0.3,
+                                  width: 200,
+                                ),
+                              ),
+                              SizedBox(height: 30),
+                              //start last row
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Column(
+                                    children: [
+                                      Icon(Icons.architecture),
+                                      Text(estate.space.toString())
+                                    ],
+                                  )),
+                                  Container(
+                                    height: 35,
+                                    width: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  Expanded(
+                                      child: Column(
+                                    children: [
+                                      Icon(Icons.subtitles_outlined),
+                                      Text(estate.rentOrSale.toString() == "0.0"
+                                          ? "بيع"
+                                          : "اجار")
+                                    ],
+                                  )),
+                                  Container(
+                                    height: 35,
+                                    width: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  estate.rentOrSale.toString() == "1.0"
+                                      ? Expanded(
+                                          child: Column(
+                                          children: [
+                                            Icon(Icons.timer),
+                                            Text(estate.numberMonth.toString())
+                                          ],
+                                        ))
+                                      : Expanded(child: Container())
+                                ],
+                              ),
+                              //end last row
+
+                              //start Specifications realEstate
+                              SizedBox(height: 30),
+                              Text("وصف العقار",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.grey)),
+                              Text(estate.locationDescription,
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                  )),
+                              //end Specifications realEstate
+
+                              // start Coordinates
+                              SizedBox(height: 30),
+                              Text("احداثيات العقار",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.grey)),
+                              SizedBox(height: 10),
+                              // start google map
+                              Container(
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.black,
+                                ),
+                                child: GoogleMap(
+                                  onMapCreated: (controller) {
+                                    setState(() {
+                                      mapController = controller;
+                                    });
+                                  },
+                                  markers: marker.toSet(),
+                                  initialCameraPosition: CameraPosition(
+                                    target: LatLng(
+                                        estate.xLatitude, estate.yLongitude),
+                                    zoom: 16,
+                                  ),
+                                  mapType: MapType.hybrid,
+                                ),
+                              ),
+                              // end google map
+                              // end Coordinates
+
+                              //start phone number
+                              SizedBox(height: 30),
+                              Text("رقم هاتف",
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.grey)),
+                              Text("$phoneNumber",
+                                  style: TextStyle(fontSize: 20)),
+                              //end phone number
+                            ],
+                          ),
                         ),
                       ),
                     )
