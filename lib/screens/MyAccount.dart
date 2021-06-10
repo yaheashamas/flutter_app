@@ -160,9 +160,8 @@ class _MyAcountState extends State<MyAcount> {
                       * chane authintication ture => false
                       */
                     provider.logout();
-                    // Provider.of<Auth>(context ,listen: false).logout();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => LoginScreen()));
                   },
                 );
               },

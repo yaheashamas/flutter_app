@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _activePage = 2;
   GlobalKey _bottomNavigationKey = GlobalKey();
+
   final List<Widget> _tabItems = [
     MyAcount(),
     SearchScreen(),

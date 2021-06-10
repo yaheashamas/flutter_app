@@ -7,7 +7,7 @@ import '../utils/allUrl.dart';
 class UserApi {
   //send email and password then i Taking token
   Future<String> loginUser({Map card}) async {
-    var url = Uri.http(device , getToken);
+    var url = Uri.http(device, getToken);
     var response = await http.post(url, body: card);
     var responseBody = convert.jsonDecode(response.body);
     if (response.statusCode == 200) {
@@ -21,14 +21,11 @@ class UserApi {
 
   //geve token return information user
   Future<User> getInfoUserFromToken({String token}) async {
-    var url = Uri.http(device , getInforUserFromToken);
-    var response =
-        await http.get(
-          url, 
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $token',
-            //  'Authorization': 'Bearer $token'
-          });
+    var url = Uri.http(device, getInforUserFromToken);
+    var response = await http.get(url, headers: {
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      //  'Authorization': 'Bearer $token'
+    });
     if (response.statusCode == 200) {
       var responseJsone =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
@@ -43,7 +40,7 @@ class UserApi {
 
   //send infomation from form to backend
   Future<User> registerUser({Map card}) async {
-    var url =Uri.http(device,userRegister);
+    var url = Uri.http(device, userRegister);
     var response = await http.post(url,
         body: convert.jsonEncode(card),
         headers: {
@@ -62,20 +59,4 @@ class UserApi {
       return userError;
     }
   }
-
-//   Future<List<User>> getAllUser() async {
-//     List<User> users = List<User>();
-//     var url = device + allUsers;
-//     var response = await http.get(url);
-//     if (response.statusCode == 200) {
-//       var responseBody =
-//           convert.jsonDecode(response.body) as Map<String, dynamic>;
-//       var alluser = responseBody['data'];
-//       for (var item in alluser) {
-//         users.add(User.fromJson(item));
-//       }
-//     }
-//     return users;
-//   }
-// }
 }

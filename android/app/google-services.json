@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "45335180806",
+    "project_id": "laranotipushflut",
+    "storage_bucket": "laranotipushflut.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45335180806:android:9f6bfe634d9b9727583587",
+        "android_client_info": {
+          "package_name": "com.example.flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45335180806-pdgvc7leg6mc6dnl85qcn78nicq6lg0u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt4tkHzu7HsJ4kNPPuwB2Q2ovM1X5NF6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45335180806-pdgvc7leg6mc6dnl85qcn78nicq6lg0u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

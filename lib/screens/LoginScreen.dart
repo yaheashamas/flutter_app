@@ -38,8 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
       if (token != null) {
         //send email and password the first one
         Provider.of<Auth>(context, listen: false).tryToken(token: token);
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()));
       } else if (token == null) {
         _scaffoldKey.currentState.showSnackBar(snackBar);
       }

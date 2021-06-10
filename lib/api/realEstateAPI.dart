@@ -59,4 +59,16 @@ class RealEstateAPI {
       return realEstates;
     }
   }
+
+  //search
+  search({Map card}) async {
+    var url = Uri.http(device, urlSearch);
+    var body = convert.jsonEncode(card);
+    var response = await http.post(url,
+        headers: {"Content-Type": "application/json"}, body: body);
+    if (response.statusCode == 200) {
+      print({"card =>>>>>>>>>>>>>>>": card});
+    }
+  }
+  
 }

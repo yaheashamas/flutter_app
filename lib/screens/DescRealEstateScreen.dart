@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:real_estate/models/RealEstateModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:real_estate/screens/newOffer.dart';
 import 'package:real_estate/services/auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -305,7 +306,36 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                                       fontSize: 20, color: Colors.grey)),
                               Text("$phoneNumber",
                                   style: TextStyle(fontSize: 20)),
+                              SizedBox(height: 30),
                               //end phone number
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.blue[300])),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  NewOffer()));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("اضافة عرض",
+                                              style: TextStyle(fontSize: 20)),
+                                          SizedBox(width: 5),
+                                          Icon(Icons.add, size: 25),
+                                        ],
+                                      ),
+                                    )),
+                              ),
                             ],
                           ),
                         ),

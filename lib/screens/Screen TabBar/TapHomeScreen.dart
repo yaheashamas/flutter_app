@@ -15,6 +15,8 @@ class TapHomeScreen extends StatefulWidget {
 class _TapHomeScreenState extends State<TapHomeScreen> {
   int typeRealEstate;
 
+  //cache save all cities
+  
   Future<List<RealEstate>> getAllRealEstates() async {
     RealEstateAPI realEstateAPI = new RealEstateAPI();
     Future<List<RealEstate>> allrealEstates =
