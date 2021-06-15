@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 import '../models/UserModel.dart';
 import '../utils/allUrl.dart';
@@ -21,8 +22,13 @@ class UserApi {
 
   //geve token return information user
   Future<User> getInfoUserFromToken({String token}) async {
+    // Read token
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String token = preferences.getString("token");
+
     var url = Uri.http(device, getInforUserFromToken);
     var response = await http.get(url, headers: {
+      "Content-Type": "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token',
       //  'Authorization': 'Bearer $token'
     });

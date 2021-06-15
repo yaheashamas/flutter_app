@@ -20,3 +20,7 @@
 // 1)-user
 // 2)-token
 // 3)-cities
+// 4)-token notification
+
+//refresh json_annotation.dart
+// flutter pub run build_runner build --delete-conflicting-outputs

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' as Io;
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:real_estate/api/registryAPI.dart';
 import 'package:real_estate/api/typeAPI.dart';
 import 'package:real_estate/models/AreaModel.dart';
 import 'package:real_estate/models/CityModel.dart';
-import 'package:real_estate/models/RealEstateModel.dart';
 import 'package:real_estate/models/RealTypeModel.dart';
 import 'package:real_estate/models/RegisterModel.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -221,11 +219,12 @@ class _AddNewRealState extends State<AddNewReal> {
       child: TextFormField(
         decoration: InputDecoration(hintText: "المساحة"),
         keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         controller: _spaceController,
         validator: (String value) {
           if (value.isEmpty) {
             return 'المساحة مطلوب';
-          } else if (value.length < 1) {
+          } else if (value.length < 2) {
             return "المساحة صغيرة";
           } else if (value.length > 3) {
             return "المساحة كبيرة";
@@ -245,6 +244,7 @@ class _AddNewRealState extends State<AddNewReal> {
         decoration: InputDecoration(hintText: "عدد الاشهر"),
         keyboardType: TextInputType.number,
         controller: _numberMounthController,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         validator: (String value) {
           if (value.isEmpty) {
             return 'عدد الاشهر مطلوب';
@@ -410,6 +410,7 @@ class _AddNewRealState extends State<AddNewReal> {
       width: 350,
       child: TextFormField(
         decoration: InputDecoration(hintText: "عدد الغرف"),
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         keyboardType: TextInputType.number,
         controller: _numberOfRoomController,
         validator: (String value) {
@@ -683,10 +684,9 @@ class _AddNewRealState extends State<AddNewReal> {
   //---------------------------------------- END ALL WIDGET --------------------
 
   //----------------------------------------- start send information -----------
-  Future<RealEstate> sendInformation({Map card, int idUser}) {
+  sendInformation({Map card, int idUser}) {
     int iduser = Provider.of<Auth>(context, listen: false).user.id;
-    var formkey = _formKey.currentState;
-    if (formkey.validate()) {
+    if (_formKey.currentState.validate()) {
       EasyLoading.show(status: '... انتظر قليلا');
       RealEstateAPI realEstateAPI = new RealEstateAPI();
       realEstateAPI.addNewRealEstate(idUser: iduser, card: card);
@@ -708,6 +708,7 @@ class _AddNewRealState extends State<AddNewReal> {
               SingleChildScrollView(
                 child: Form(
                   key: _formKey,
+                  autovalidateMode: AutovalidateMode.always,
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 50, right: 20, left: 10),
@@ -967,7 +968,6 @@ class _AddNewRealState extends State<AddNewReal> {
                                     'y_longitude': positioned.longitude,
                                     'images': files,
                                   };
-                                  print({"card": cards});
                                   if (images.isEmpty) {
                                     showDialog(
                                         context: context,

@@ -96,11 +96,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String token = '';
 
-  getTokenNotification() {
+  getTokenNotification() async {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-    _firebaseMessaging.getToken().then((value) =>
-        print({"value =>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>": value}));
+    // set token notification
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    _firebaseMessaging.getToken().then((value) {
+      print(value);
+      setState(() {
+        preferences.setString('tokenNoti', value);
+      });
+    });
   }
 
   Future<String> getToken() async {
@@ -125,8 +132,6 @@ class _MyAppState extends State<MyApp> {
                 channel.id,
                 channel.name,
                 channel.description,
-                // TODO add a proper drawable resource to android, for now using
-                //      one that already exists in example app.
                 icon: '@mipmap/splash',
               ),
             ));
@@ -164,9 +169,7 @@ class _MyAppState extends State<MyApp> {
                 content: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(notification.body)
-                    ],
+                    children: [Text(notification.body)],
                   ),
                 ),
               );

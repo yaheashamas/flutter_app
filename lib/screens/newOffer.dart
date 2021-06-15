@@ -1,7 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:real_estate/api/offerApi.dart';
+import 'package:real_estate/models/RealEstateModel.dart';
+import 'package:real_estate/models/UserModel.dart';
 
 class NewOffer extends StatefulWidget {
-  NewOffer({Key key}) : super(key: key);
+  User user;
+  RealEstate realEstate;
+
+  NewOffer({this.user, this.realEstate});
 
   @override
   _NewOfferState createState() => _NewOfferState();
@@ -10,6 +20,21 @@ class NewOffer extends StatefulWidget {
 class _NewOfferState extends State<NewOffer> {
   TextEditingController _offerController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  //flutter_easyLoding
+  Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    EasyLoading.addStatusCallback((status) {
+      print('EasyLoading Status $status');
+      if (status == EasyLoadingStatus.dismiss) {
+        _timer?.cancel();
+      }
+    });
+  }
+
   //Email
   Widget _buildEmail() {
     return TextFormField(
@@ -32,6 +57,8 @@ class _NewOfferState extends State<NewOffer> {
           ),
           labelText: 'العرض',
           prefixIcon: Icon(Icons.local_offer_outlined)),
+      maxLength: 50,
+      maxLines: 3,
       controller: _offerController,
       validator: (String value) {
         if (value.isEmpty) {
@@ -44,30 +71,47 @@ class _NewOfferState extends State<NewOffer> {
 
   @override
   Widget build(BuildContext context) {
-    sendOffer() {
-      if (_formKey.currentState.validate()) {}
+    bool test = false;
+
+    sendOffer({Map card}) async {
+      if (_formKey.currentState.validate()) {
+        EasyLoading.show(status: '... انتظر قليلا');
+        OfferApi offerApi = new OfferApi();
+        test = await offerApi.saveOffer(card: card);
+        EasyLoading.showSuccess('تم تحميل البيانات بنجاح');
+        Timer(Duration(seconds: 1), () {
+          Navigator.pop(context, true);
+        });
+      }
     }
 
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.always,
       child: Padding(
         padding: const EdgeInsets.only(top: 50, right: 10, left: 10),
         child: Column(
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(child: _buildEmail(), flex: 5),
                 Expanded(
-                    child:TextButton(
-                          style: ButtonStyle(
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.blue),
-                          ),
-                          child: Icon(Icons.send),
-                          onPressed: () {
-                            sendOffer();
-                          })),
+                    child: TextButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.blue),
+                        ),
+                        child: Icon(Icons.send),
+                        onPressed: () {
+                          Map card = {
+                            "description": _offerController.text,
+                            "user_id": widget.user.id,
+                            "estate_id": widget.realEstate.id,
+                          };
+                          print({"card offer ": card});
+                          sendOffer(card: card);
+                        })),
               ],
             )
           ],

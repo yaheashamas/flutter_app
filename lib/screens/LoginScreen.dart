@@ -7,8 +7,7 @@ import 'package:real_estate/screens/RegisterScreen.dart';
 import 'package:real_estate/services/auth.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
-
+  LoginScreen();
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -191,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       'password': _passwordController.text
                     };
                     _scaffoldKey.currentState.showSnackBar(SnackBar(
-                      duration: new Duration(seconds: 4),
+                      duration: new Duration(seconds: 0),
                       content: Row(
                         children: <Widget>[
                           new CircularProgressIndicator(
@@ -221,7 +220,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RegisterScreen()));
+                                  builder: (context) =>
+                                      RegisterScreen()));
                         }),
                     Text("ليس لديك حساب ؟"),
                   ],

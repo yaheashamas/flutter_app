@@ -4,6 +4,7 @@ import 'package:real_estate/drawer/NavigatorDrawer.dart';
 import 'package:real_estate/models/UserModel.dart';
 import 'package:real_estate/screens/AddNewReal.dart';
 import 'package:real_estate/screens/LoginScreen.dart';
+import 'package:real_estate/screens/myRealEstate.dart';
 import 'package:real_estate/services/auth.dart';
 
 class MyAcount extends StatefulWidget {
@@ -101,27 +102,33 @@ class _MyAcountState extends State<MyAcount> {
               ),
             ),
             SizedBox(height: 20),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    Icons.corporate_fare_rounded,
-                    color: Colors.grey[600],
-                    size: 25,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 7),
-                    child: Text(
-                      "عقاراتي",
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25),
+            InkWell(
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      Icons.corporate_fare_rounded,
+                      color: Colors.grey[600],
+                      size: 25,
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 7),
+                      child: Text(
+                        "عقاراتي",
+                        style: TextStyle(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => MyRealEstate(idUser: user.id)));
+              },
             ),
             SizedBox(height: 20),
             Align(

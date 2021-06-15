@@ -1,16 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:real_estate/api/userAPI.dart';
 import 'package:real_estate/models/UserModel.dart';
+import 'package:real_estate/screens/LoginScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key key}) : super(key: key);
+  RegisterScreen();
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
+  String tokenNoti ;
   //seccess is send email or password not correct
   final snackBarSeccess = SnackBar(
     content: Text('تم التسجيل بنجاح'),
@@ -18,19 +23,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
     backgroundColor: Colors.green,
   );
 
-    //woring is send email or password not correct
+  //woring is send email or password not correct
   final snackBarWoring = SnackBar(
-    content: Text('رقم الموبايل موجود بلفعل يجب تغير الرقم'),
+    content: Text('البريد الالكتروني او رقم الموبايل موجودة بلفعل'),
     duration: Duration(seconds: 5),
     backgroundColor: Colors.red,
   );
 
+  //get token notification
+  getTokenNotification() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String tokennotification = sharedPreferences.getString('tokenNoti');
+    setState(() {
+      tokenNoti = tokennotification;
+    });
+  }
+
   @override
-  void initState() { 
+  void initState() {
     super.initState();
+    getTokenNotification();
     _passwordVisible = false;
   }
-  
+
   bool _passwordVisible;
 
   TextEditingController _nameController = TextEditingController();
@@ -39,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _phoneNumberController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    //this key for all this page
+  //this key for all this page
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   //When you leave the page, you clear the information
@@ -58,12 +73,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       UserApi userApi = new UserApi();
       User user = await userApi.registerUser(card: card);
       if (user != null) {
-        _scaffoldKey.currentState.showSnackBar(snackBarSeccess); 
-      }else{
+        _scaffoldKey.currentState.showSnackBar(snackBarSeccess);
+        Future.delayed(const Duration(seconds: 3), () {
+            Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LoginScreen()));
+        });
+
+      } else {
         _scaffoldKey.currentState.showSnackBar(snackBarWoring);
       }
-    } else {
-    }
+    } else {}
   }
 
   //build inputs
@@ -78,11 +97,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        errorBorder:OutlineInputBorder(
+        errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        enabledBorder:OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.blue, width: 2),
         ),
@@ -112,11 +131,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        errorBorder:OutlineInputBorder(
+        errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        enabledBorder:OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.blue, width: 2),
         ),
@@ -150,11 +169,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        errorBorder:OutlineInputBorder(
+        errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        enabledBorder:OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.blue, width: 2),
         ),
@@ -203,11 +222,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        errorBorder:OutlineInputBorder(
+        errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
-        enabledBorder:OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
           borderSide: BorderSide(color: Colors.blue, width: 2),
         ),
@@ -218,6 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       keyboardType: TextInputType.number,
       controller: _phoneNumberController,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (String value) {
         if (value.isEmpty) {
           return 'رقم الموبايل مطلوب';
@@ -240,19 +260,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      key:_scaffoldKey,
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 30,right: 20,left: 20),
-              child: Column(
-                children: [
-                  Container(
-                  height: 200,
-                  child: Image(image: AssetImage("images/register.png"),fit: BoxFit.cover)
-                ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 30, right: 20, left: 20),
+            child: Column(
+              children: [
+                Container(
+                    height: 200,
+                    child: Image(
+                        image: AssetImage("images/register.png"),
+                        fit: BoxFit.cover)),
                 SizedBox(height: 15),
                 _buildName(),
                 _buildEmail(),
@@ -266,9 +287,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   minWidth: double.infinity,
                   color: Colors.blue,
                   child: Container(
-                    child: Text("ارسال",
-                      style: TextStyle(color: Colors.white)
-                    )),
+                      child:
+                          Text("ارسال", style: TextStyle(color: Colors.white))),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
@@ -278,25 +298,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       'name': _nameController.text,
                       'email': _emailController.text,
                       'password': _passwordController.text,
-                      'phone_number': int.tryParse(_phoneNumberController.text)
+                      'phone_number': int.tryParse(_phoneNumberController.text),
+                      'fcm_token':tokenNoti
                     };
-                    _scaffoldKey.currentState.showSnackBar(
-                      SnackBar(
-                        duration: new Duration(seconds: 4),
-                        content:Row(
-                          children: <Widget>[
-                            new CircularProgressIndicator(valueColor:AlwaysStoppedAnimation(Colors.blue)),
-                            new Text("  انتظر بضع ثواني")
-                          ],
-                        ),
-                      )
-                    );
+                    print(cards);
+                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      duration: new Duration(seconds: 0),
+                      content: Row(
+                        children: <Widget>[
+                          new CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.blue)),
+                          new Text("  انتظر بضع ثواني")
+                        ],
+                      ),
+                    ));
                     register(card: cards);
                   },
                 ),
-                ],
-              ),
+              ],
             ),
+          ),
         ),
       ),
     );

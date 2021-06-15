@@ -14,40 +14,47 @@ class _NavigatorDrawerState extends State<NavigatorDrawer> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context){
+      create: (context) {
         return Auth();
       },
       child: Container(
-      child: Drawer(
+        child: Drawer(
           child: Padding(
-            padding: const EdgeInsets.only(top: 50,left: 15),
-            child: ListView(
-              children: [
-                ListTile(
-                  title: Text("اضافة عقار",style: TextStyle(fontSize: 18),),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: (){
-                  },
-                ),
-                Consumer<Auth>(builder: (context,provider,child){
-                  return ListTile(
-                    title: Text("تسجيل خروج",style: TextStyle(fontSize: 18),),
+              padding: const EdgeInsets.only(top: 50, left: 15),
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: Text(
+                      "اضافة عقار",
+                      style: TextStyle(fontSize: 18),
+                    ),
                     trailing: Icon(Icons.chevron_right),
-                    onTap: (){
-                      /*click logout code move to page {auth} to function logout
+                    onTap: () {},
+                  ),
+                  Consumer<Auth>(builder: (context, provider, child) {
+                    return ListTile(
+                      title: Text(
+                        "تسجيل خروج",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      trailing: Icon(Icons.chevron_right),
+                      onTap: () {
+                        /*click logout code move to page {auth} to function logout
                       * chane authintication ture => false
-                      */ 
-                      provider.logout();
-                      // Provider.of<Auth>(context ,listen: false).logout();
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-                    },
-                  ); 
-                }),
-              ],
-            )
-          ),
+                      */
+                        provider.logout();
+                        // Provider.of<Auth>(context ,listen: false).logout();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                    );
+                  }),
+                ],
+              )),
+        ),
       ),
-    ),
     );
   }
 }

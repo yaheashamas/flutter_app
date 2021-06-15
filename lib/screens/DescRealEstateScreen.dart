@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:real_estate/models/RealEstateModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+import 'package:real_estate/models/UserModel.dart';
 import 'package:real_estate/screens/newOffer.dart';
 import 'package:real_estate/services/auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -50,6 +51,7 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
     FlutterMoneyFormatter fmf = FlutterMoneyFormatter(amount: price);
     Size size = MediaQuery.of(context).size;
     int phoneNumber = Provider.of<Auth>(context, listen: false).user.phone;
+    User user = Provider.of<Auth>(context, listen: false).user;
 
     return ChangeNotifierProvider(
       create: (context) {
@@ -319,8 +321,10 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  NewOffer()));
+                                              builder: (context) => NewOffer(
+                                                    realEstate: widget.estate,
+                                                    user: user,
+                                                  )));
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(10),
