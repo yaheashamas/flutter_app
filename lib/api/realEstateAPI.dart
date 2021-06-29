@@ -83,6 +83,7 @@ class RealEstateAPI {
   }
 
   getAllRealEstateForUser({int id}) async {
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String token = preferences.getString("token");
 
@@ -98,7 +99,6 @@ class RealEstateAPI {
       for (var item in data) {
         realEstates.add(RealEstate.fromJson(item));
       }
-      print(realEstates);
       return realEstates;
     } else {
       return realEstates;

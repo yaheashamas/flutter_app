@@ -18,7 +18,6 @@ class AreaAPi {
     Map data = {"id": idCity};
     var body = convert.jsonEncode(data);
     var url = Uri.http(device, areas);
-
     var response = await http
         .post(url, body: body, headers: {
           "Content-Type": "application/json",

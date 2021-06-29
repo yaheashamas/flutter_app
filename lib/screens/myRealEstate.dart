@@ -36,7 +36,7 @@ class _MyRealEstateState extends State<MyRealEstate> {
                 child: estates.isEmpty
                     ? Center(
                         child: Text(
-                        "لم تقم بتزيل اي عقار بعد",
+                        "لم تقم بتنزيل اي عقار بعد",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -70,8 +70,7 @@ class _MyRealEstateState extends State<MyRealEstate> {
                                     ],
                                   ),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Expanded(
                                         child: Container(
@@ -101,28 +100,39 @@ class _MyRealEstateState extends State<MyRealEstate> {
                                       ),
                                       SizedBox(width: 15),
                                       Expanded(
-                                          child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            estate.area.city.name,
-                                          ),
-                                          Text(
-                                            estate.area.name,
-                                          ),
-                                          Text(estate.realEstateTypeId == 1
-                                              ? "بيت"
-                                              : "محل"),
-                                          Text(estate.rentOrSale == 1
-                                              ? "اجار"
-                                              : "بيع")
-                                        ],
-                                      )),
-                                      Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(bottom: 5),
-                                            child: TextButton(
+                                        flex: 2,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  estate.area.city.name,
+                                                ),
+                                                Text(
+                                                  estate.area.name,
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                    estate.realEstateTypeId == 1
+                                                        ? "بيت"
+                                                        : "محل"),
+                                                Text(estate.rentOrSale == 1
+                                                    ? "اجار"
+                                                    : "بيع")
+                                              ],
+                                            ),
+                                            TextButton(
                                                 style: TextButton.styleFrom(
                                                   primary: Colors.white,
                                                   backgroundColor: Colors.teal,
@@ -133,11 +143,14 @@ class _MyRealEstateState extends State<MyRealEstate> {
                                                       MaterialPageRoute(
                                                           builder: (context) =>
                                                               AllOffer(
-                                                                  idEstate: estate
-                                                                      .id)));
+                                                                  idEstate:
+                                                                      estate
+                                                                          .id)));
                                                 },
-                                                child: Text("العروض")),
-                                          )),
+                                                child: Text("العروض"))
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ));
                             }),
@@ -146,56 +159,3 @@ class _MyRealEstateState extends State<MyRealEstate> {
         });
   }
 }
-
-//  Expanded(
-//                                   flex: 2,
-//                                   child: Column(
-//                                     mainAxisAlignment:
-//                                         MainAxisAlignment.spaceBetween,
-//                                     children: [
-//                                       Row(
-//                                         mainAxisAlignment:
-//                                             MainAxisAlignment
-//                                                 .spaceBetween,
-//                                         children: [
-//                                           Text(
-//                                             estate.area.city.name,
-//                                           ),
-//                                           Text(
-//                                             estate.area.name,
-//                                           )
-//                                         ],
-//                                       ),
-//                                       Row(
-//                                         mainAxisAlignment:
-//                                             MainAxisAlignment
-//                                                 .spaceBetween,
-//                                         children: [
-//                                           Text(
-//                                               estate.realEstateTypeId == 1
-//                                                   ? "بيت"
-//                                                   : "محل"),
-//                                           Text(estate.rentOrSale == 1
-//                                               ? "اجار"
-//                                               : "بيع")
-//                                         ],
-//                                       ),
-//                                       TextButton(
-//                                           style: TextButton.styleFrom(
-//                                             primary: Colors.white,
-//                                             backgroundColor: Colors.teal,
-//                                             onSurface: Colors.grey,
-//                                           ),
-//                                           onPressed: () {
-//                                             Navigator.of(context).push(
-//                                                 MaterialPageRoute(
-//                                                     builder: (context) =>
-//                                                         AllOffer(
-//                                                             idEstate:
-//                                                                 estate
-//                                                                     .id)));
-//                                           },
-//                                           child: Text("العروض"))
-//                                     ],
-//                                   ),
-//                                 )

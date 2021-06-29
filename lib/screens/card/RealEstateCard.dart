@@ -64,7 +64,7 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                Icon(Icons.my_library_books_outlined),
+                                Icon(Icons.my_library_books),
                                 Text(realEstate.register.name),
                               ],
                               ),
@@ -73,7 +73,7 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(realEstate.realType.code == "HOME" ? Icons.home_outlined : Icons.shop),
+                                Icon(realEstate.realType.code == "HOME" ? Icons.home : Icons.store_mall_directory),
                                 Text(realEstate.realType.name)
                               ],
                             ),
@@ -82,7 +82,7 @@ class RealEstateCard extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                Icon(Icons.location_on_outlined),
+                                Icon(Icons.location_on),
                                 Flexible(child: Text(realEstate.area.name,))
                               ],
                               ),

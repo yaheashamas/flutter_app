@@ -12,7 +12,7 @@ class _NotifivationScreenState extends State<NotifivationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //build future builder
-        body: Center(child: Text("notificayon"))
+        body: Center(child: Text("notification"))
     );
   }
 }

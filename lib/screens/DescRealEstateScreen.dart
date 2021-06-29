@@ -20,6 +20,12 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
   RealEstate estate;
   List allUrlImages;
   int _current = 0;
+  User user;
+
+  User getInfoUser(context) {
+    User user = Provider.of<Auth>(context, listen: false).user;
+    return user;
+  }
 
   GoogleMapController mapController;
   List<Marker> marker = [];
@@ -41,6 +47,7 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
     allUrlImages = allImages();
     latLng = LatLng(estate.xLatitude, estate.yLongitude);
     marker.add(Marker(markerId: MarkerId(id.toString()), position: latLng));
+    user = getInfoUser(context);
   }
 
   CarouselController buttonCarouselController = CarouselController();
@@ -310,6 +317,7 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                                   style: TextStyle(fontSize: 20)),
                               SizedBox(height: 30),
                               //end phone number
+                              estate.userId != user.id ?
                               Container(
                                 width: MediaQuery.of(context).size.width,
                                 child: ElevatedButton(
@@ -339,7 +347,9 @@ class _DescRealEstateScreenState extends State<DescRealEstateScreen> {
                                         ],
                                       ),
                                     )),
-                              ),
+                              )
+                              :
+                              Container()
                             ],
                           ),
                         ),

@@ -41,9 +41,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
-    super.initState();
     getTokenNotification();
     _passwordVisible = false;
+    super.initState();
   }
 
   bool _passwordVisible;

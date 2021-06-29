@@ -50,6 +50,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => Auth()),
       ],
       child: MaterialApp(
+        title: 'Real Estate',
         debugShowCheckedModeBanner: false,
         home: MyApp(),
         theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
@@ -103,7 +104,7 @@ class _MyAppState extends State<MyApp> {
     // set token notification
     SharedPreferences preferences = await SharedPreferences.getInstance();
     _firebaseMessaging.getToken().then((value) {
-      print(value);
+      print({"notification token is ":value});
       setState(() {
         preferences.setString('tokenNoti', value);
       });

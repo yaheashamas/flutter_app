@@ -1,3 +1,32 @@
+// //local
+// final String device = "192.168.1.112:8000";
+// //device
+// final String getToken = "/api/login";
+// //user
+// final String getInforUserFromToken = "/api/user";
+// final String userRegister = "/api/register";
+// final String allUsers = "/api/users";
+// final String refresh = "/api/refresh";
+// //realEstate
+// final String realEstates = '/api/realestates';
+// final String addRealEstate = '/api/realestate/user/';
+// final String allRealEstate = '/api/AllRealEstates';
+// final String myRealEstate = '/api/myRealEstate/';
+// //city
+// final String cities = "/api/cities";
+// //area
+// final String areas = "/api/areas";
+// //type
+// final String type = "/api/types";
+// //Registries
+// final String registry = "/api/Registries";
+// //search
+// final String searchAboutRealEstate = "/api/search";
+// //add new offer
+// final String addNewOffer = "/api/offer";
+// final String allOfferByEstate = "/api/offer/getByEstate/";
+
+// host
 final String device = "projects.pro-apps.net";
 //device
 final String getToken = "/realestate-project/public/api/login";

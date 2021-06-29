@@ -35,64 +35,69 @@ class _AllOfferState extends State<AllOffer> {
                 return Center(child: CircularProgressIndicator());
               }
               List<Offer> offers = snapshot.data ?? [];
+              if (offers.isEmpty) {
+                return Center(
+                  child: Text(
+                    "لا يوجد اي تعليق على العقار",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
               return ListView.builder(
                   itemCount: offers.length,
                   itemBuilder: (context, index) {
                     Offer offer = offers[index];
                     return Container(
-                        child: offers.isEmpty
-                            ? Center(
-                                child: Text(
-                                "لم تقم بتزيل اي عقار بعد",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ))
-                            : Container(
-                                padding: EdgeInsets.only(right: 10,top: 10,left: 10,bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.only(bottom: 35),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
+                        padding: EdgeInsets.only(
+                            right: 10, top: 10, left: 10, bottom: 10),
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.only(bottom: 35),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                              topRight: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset:
+                                  Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(offer.user.name),
+                                    Text(offer.user.email),
+                                    Text(offer.user.phone.toString()),
                                   ],
                                 ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(offer.user.name),
-                                            Text(offer.user.email),
-                                            Text(offer.user.phone.toString()),
-                                          ],
-                                        ),
-                                        SizedBox(width: 10),
-                                        Icon(Icons.person,color: Colors.blue,),
-                                      ],
-                                    ),
-                                    Divider(
-                                      color: Colors.grey,
-                                    ),
-                                    Text(offer.description)
-                                  ],
-                                )));
+                                SizedBox(width: 10),
+                                Icon(
+                                  Icons.person,
+                                  color: Colors.blue,
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                            ),
+                            Text(offer.description)
+                          ],
+                        ));
                   });
             }));
   }

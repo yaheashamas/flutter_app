@@ -7,7 +7,6 @@ import 'package:real_estate/screens/RegisterScreen.dart';
 import 'package:real_estate/services/auth.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen();
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -220,8 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      RegisterScreen()));
+                                  builder: (context) => RegisterScreen()));
                         }),
                     Text("ليس لديك حساب ؟"),
                   ],

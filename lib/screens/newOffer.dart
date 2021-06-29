@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:real_estate/api/offerApi.dart';
 import 'package:real_estate/models/RealEstateModel.dart';
@@ -28,7 +26,6 @@ class _NewOfferState extends State<NewOffer> {
   void initState() {
     super.initState();
     EasyLoading.addStatusCallback((status) {
-      print('EasyLoading Status $status');
       if (status == EasyLoadingStatus.dismiss) {
         _timer?.cancel();
       }
